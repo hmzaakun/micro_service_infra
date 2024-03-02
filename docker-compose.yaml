@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  db_auth:
+    image: postgres:latest
+    volumes:
+      - db_auth_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: db_auth
+      POSTGRES_USER: chef
+      POSTGRES_PASSWORD: chef
+    ports:
+      - "5432:5432"
+  api_auth:
+    build: ./api_auth
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: "postgresql://chef:chef@db_auth/db_auth?schema=public"
+    depends_on:
+      - db_auth
+  prisma-migrate:
+    image: node:alpine
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: sh -c "npm install && npx prisma migrate deploy"
+    environment:
+      - DATABASE_URL=postgresql://USER:PASSWORD@db_auth/NOM_DE_LA_BDD?schema=public
+    depends_on:
+      - db_auth
+
+volumes:
+  db_auth_data:
