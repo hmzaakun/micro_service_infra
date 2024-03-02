@@ -75,4 +75,47 @@ router.post('/login', async (req, res) => {
     }
   });
 
+  router.get('/users', authenticateToken, async (req, res) => {
+    try {
+      const users = await prisma.user.findMany({
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          createdAt: true,
+          // Ne pas renvoyer le mot de passe pour des raisons de sécurité
+        },
+      });
+      res.json(users);
+    } catch (error) {
+      res.status(500).json({ error: "Erreur lors de la récupération des utilisateurs" });
+    }
+  });
+
+  router.get('/me', authenticateToken, async (req, res) => {
+    try {
+      // L'ID de l'utilisateur est récupéré du middleware authenticateToken
+      const userId = req.user?.userId;
+  
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          createdAt: true,
+          // Ne pas renvoyer le mot de passe pour des raisons de sécurité
+        },
+      });
+  
+      if (user) {
+        res.json(user);
+      } else {
+        res.status(404).json({ error: "Utilisateur non trouvé" });
+      }
+    } catch (error) {
+      res.status(500).json({ error: "Erreur lors de la récupération des informations de l'utilisateur" });
+    }
+  });
+
 export default router;
