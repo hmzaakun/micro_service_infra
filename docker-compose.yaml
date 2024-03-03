@@ -29,6 +29,15 @@ services:
       POSTGRES_PASSWORD: chef
     ports:
       - "5433:5434"
+  api_post:
+    build: ./api_post
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: "postgresql://chef:chef@db_forum:5432/db_forum"
+    depends_on:
+      - db_forum
+
 
 volumes:
   db_auth_data:

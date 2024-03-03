@@ -1,5 +1,5 @@
 import express from 'express';
-import authRoutes from './authController'; // Assurez-vous que le chemin d'importation est correct
+import authRoutes from './authController';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
