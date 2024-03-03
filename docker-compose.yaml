@@ -19,5 +19,17 @@ services:
     depends_on:
       - db_auth
 
+  db_forum:
+    image: postgres:latest
+    volumes:
+      - db_forum_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: db_forum
+      POSTGRES_USER: chef
+      POSTGRES_PASSWORD: chef
+    ports:
+      - "5433:5434"
+
 volumes:
   db_auth_data:
+  db_forum_data:
