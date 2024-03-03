@@ -1,0 +1,17 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  postId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
