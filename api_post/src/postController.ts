@@ -16,6 +16,7 @@ router.post('/posts', async (req, res) => {
     });
     res.status(201).json(post);
   } catch (error) {
+    console.error("Erreur lors de la création du post:", error);
     res.status(500).json({ error: "Erreur lors de la création du post" });
   }
 });

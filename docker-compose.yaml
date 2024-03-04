@@ -34,7 +34,7 @@ services:
     ports:
       - "3001:3001"
     environment:
-      DATABASE_URL: "postgresql://chef:chef@db_forum:5433/db_forum?schema=public"
+      DATABASE_URL: "postgresql://chef:chef@db_forum/db_forum?schema=public"
     depends_on:
       - db_forum
   api_com:
@@ -42,7 +42,7 @@ services:
     ports:
       - "3002:3002"
     environment:
-      DATABASE_URL: "postgresql://chef:chef@db_forum:5433/db_forum"
+      DATABASE_URL: "postgresql://chef:chef@db_forum/db_forum?schema=public"
     depends_on:
       - db_forum
 
