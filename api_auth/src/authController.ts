@@ -118,4 +118,19 @@ router.post('/login', async (req, res) => {
     }
   });
 
+  router.post('/verifyToken', (req, res) => {
+    const { token } = req.body;
+    if (!token) {
+      return res.status(401).json({ message: "Token est requis" });
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET as string, (err: any, user: any) => {
+      if (err) {
+        return res.status(403).json({ message: "Token invalide" });
+      }
+      res.json({ user });
+    });
+  });
+
+
 export default router;

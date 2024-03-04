@@ -46,6 +46,15 @@ services:
     depends_on:
       - db_forum
 
+  gateway:
+    build: ./gateway
+    ports:
+      - "4000:4000"
+    depends_on:
+      - api_auth
+      - api_post
+      - api_com
+
 volumes:
   db_auth_data:
   db_forum_data:
