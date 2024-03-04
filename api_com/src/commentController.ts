@@ -6,10 +6,10 @@ const router = express.Router();
 
 // Route pour créer un commentaire
 router.post('/comments', async (req, res) => {
-  const { content, postId } = req.body;
+  const { content, postId, userId, userName } = req.body;
   try {
     const comment = await prisma.comment.create({
-      data: { content, postId },
+      data: { content, postId, userId, userName },
     });
     res.status(201).json(comment);
   } catch (error) {

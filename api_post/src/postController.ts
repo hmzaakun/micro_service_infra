@@ -9,10 +9,10 @@ const router = express.Router();
 
 // Route pour créer un post
 router.post('/posts', async (req, res) => {
-  const { title, content } = req.body;
+  const { title, content, userId, userName } = req.body;
   try {
     const post = await prisma.post.create({
-      data: { title, content },
+      data: { title, content, userId, userName },
     });
     res.status(201).json(post);
   } catch (error) {
