@@ -3,9 +3,9 @@ import axios from 'axios';
 
 const router = express.Router();
 
-const AUTH_SERVICE_URL = 'http://api_auth:3000/api';
-const POST_SERVICE_URL = 'http://api_post:3001';
-const COM_SERVICE_URL = 'http://api_com:3002';
+const AUTH_SERVICE_URL = 'http://host.docker.internal:3000/api/auth';
+const POST_SERVICE_URL = 'http://host.docker.internal:3001';
+const COM_SERVICE_URL = 'http://host.docker.internal:3002';
 
 // Helper pour faire des requêtes à l'API d'authentification
 const authRequest = axios.create({
@@ -35,7 +35,7 @@ router.post('/signup', async (req, res) => {
         const response = await authRequest.post('/signup', req.body);
         res.json(response.data);
     } catch (error: any) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: error.message});
     }
 });
 
@@ -93,7 +93,8 @@ router.post('/posts', async (req, res) => {
 const token = req.headers.authorization ?? '';
 try {
     const userInfo = await getUserInfo(token.split(' ')[1]);
-    const postResponse = await axios.post(`${POST_SERVICE_URL}`, {
+    try {
+      const postResponse = await axios.post(`${POST_SERVICE_URL}`+'/posts', {
         title: req.body.title,
         content: req.body.content,
         userId: userInfo.id,
@@ -102,6 +103,9 @@ try {
         headers: { Authorization: token },
     });
     res.json(postResponse.data);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message , userInfo: userInfo});
+  }
 } catch (error: any) {
     res.status(500).json({ error: error.message });
 }
@@ -110,9 +114,8 @@ try {
 // Récupérer tous les posts (nécessite une vérification de token)
 router.get('/posts', async (req, res) => {
   const token = req.headers.authorization ?? '';
-  if (!(await verifyToken(token))) {
-    return res.status(403).json({ error: "Token invalide" });
-  }
+  const verif = await verifyToken(token);
+  if (verif == null) return res.sendStatus(401);
 
   try {
     const postsResponse = await axios.get(`${POST_SERVICE_URL}/posts`, {
@@ -128,9 +131,8 @@ router.get('/posts', async (req, res) => {
 router.patch('/posts/:id', async (req, res) => {
   const token = req.headers.authorization ?? '';
   const { id } = req.params;
-  if (!(await verifyToken(token))) {
-    return res.status(403).json({ error: "Token invalide" });
-  }
+  const verif = await verifyToken(token);
+  if (verif == null) return res.sendStatus(401);
 
   try {
     const updateResponse = await axios.patch(`${POST_SERVICE_URL}/posts/${id}`, req.body, {
@@ -164,9 +166,8 @@ router.post('/comments', async (req, res) => {
 // Récupérer tous les commentaires d'un post
 router.get('/comments/:postId', async (req, res) => {
   const token = req.headers.authorization ?? '';
-  if (!(await verifyToken(token))) {
-    return res.status(403).json({ error: "Token invalide" });
-  }
+  const verif = await verifyToken(token);
+  if (verif == null) return res.sendStatus(401);
 
   const { postId } = req.params;
   try {

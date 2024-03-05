@@ -119,10 +119,9 @@ router.post('/login', async (req, res) => {
   });
 
   router.post('/verifyToken', (req, res) => {
-    const { token } = req.body;
-    if (!token) {
-      return res.status(401).json({ message: "Token est requis" });
-    }
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    if (token == null) return res.sendStatus(401);
 
     jwt.verify(token, process.env.JWT_SECRET as string, (err: any, user: any) => {
       if (err) {

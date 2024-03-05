@@ -8,5 +8,5 @@ app.use(express.json());
 app.use(gatewayRouter);
 
 app.listen(PORT, () => {
-  console.log(`API Gateway running on port :${PORT}`);
+  console.log(`API Gateway running on port: ${PORT}`);
 });
