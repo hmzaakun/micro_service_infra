@@ -36,10 +36,6 @@ La Gateway expose les routes suivantes :
 
 Vous pouvez tester ces routes en utilisant Postman ou tout autre outil de requête HTTP en configurant le `Bearer Token` avec le JWT obtenu après la connexion.
 
-## Contribution 🤝
-
-Ce projet a été rendu possible grâce à la contribution significative de mon ami @Yassine94110.
-
 ---
 
 Merci d'avoir consulté ce projet !
